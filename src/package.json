@@ -1,7 +1,10 @@
 {
-  "name": "nativescript-datetimepicker",
-  "version": "1.2.3",
+  "name": "@rebootmobility/nativescript-datetimepicker",
+  "version": "1.2.4",
   "description": "A NativeScript plugin for picking date and time.",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "typings": "index.d.ts",
   "nativescript": {
     "platforms": {
@@ -28,7 +31,19 @@
     "ci.tslint": "npm i && tslint '**/*.ts' --config '../tslint.json' --exclude '**/node_modules/**' --exclude '**/platforms/**'",
     "ngc": "ngc -p tsconfig.json",
     "prepack": "npm i && npm run ngc",
-    "pack": "bash ../publish/pack.sh"
+    "pack": "bash ../publish/pack.sh",
+    "changelog": "conventional-changelog -p angular -i ../CHANGELOG.md -s -r 0",
+    "postchangelog": "git add ../CHANGELOG.md && git commit -m 'chore(changelog): Updated CHANGELOG.md'",
+    "release:pre": "npm run clean && npm run build && npm run test && npm run build",
+    "git-tag": "git tag 'v'${npm_package_version}",
+    "release:post": "git add package.json && git commit -m 'chore(release): New release version' && npm run changelog && npm run git-tag && npm run version-and-push",
+    "release:major": "npm run release:pre && npm version major && npm run release:post",
+    "release:minor": "npm run release:pre && npm version minor && npm run release:post",
+    "release:patch": "npm run release:pre && npm version patch && npm run release:post",
+    "version-and-push": "git push origin && git push origin --tags && npm run merge-and-publish",
+    "merge-and-publish:pre": "git checkout master && git merge develop",
+    "merge-and-publish": "mv ../README.md .&& mv ../LICENSE . && npm publish && git reset --hard && git clean -f",
+    "postmerge-and-publish": "git checkout develop"
   },
   "keywords": [
     "NativeScript",
@@ -45,14 +60,14 @@
     "email": "nativescriptplugins@progress.com"
   },
   "bugs": {
-    "url": "https://github.com/NativeScript/nativescript-datetimepicker/issues"
+    "url": "https://github.com/rebootmobility/nativescript-datetimepicker/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/NativeScript/nativescript-datetimepicker.git"
+    "url": "git+https://github.com/rebootmobility/nativescript-datetimepicker.git"
   },
   "license": "Apache-2.0",
-  "homepage": "https://github.com/NativeScript/nativescript-datetimepicker",
+  "homepage": "https://github.com/rebootmobility/nativescript-datetimepicker",
   "readmeFilename": "README.md",
   "devDependencies": {
     "@angular/common": "~8.2.0",

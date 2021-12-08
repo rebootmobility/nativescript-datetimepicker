@@ -12,9 +12,9 @@ export class DateTimePickerStyle extends DateTimePickerStyleBase {
 }
 
 export class DateTimePicker extends DateTimePickerBase {
-    private static readonly  SUPPORT_DATE_PICKER_STYLE = parseFloat(device.osVersion) >= 14.0;
-    private static readonly  SUPPORT_TEXT_COLOR = parseFloat(device.osVersion) < 14.0;
-    private static readonly  DEFAULT_DATE_PICKER_STYLE = 1;
+    private static readonly SUPPORT_DATE_PICKER_STYLE = parseFloat(device.osVersion) >= 14.0;
+    private static readonly SUPPORT_TEXT_COLOR = parseFloat(device.osVersion) < 14.0;
+    private static readonly DEFAULT_DATE_PICKER_STYLE = 1;
 
     public static PICKER_DEFAULT_MESSAGE_HEIGHT = 192;
     public static PICKER_WIDTH_INSETS = 16;
@@ -145,6 +145,18 @@ export class DateTimePicker extends DateTimePickerBase {
     }
 
     static _showNativeDialog(nativeDialog: UIAlertController, nativePicker: UIDatePicker, style: DateTimePickerStyle) {
+        // const rootViewController = UIApplication.sharedApplication.keyWindow.rootViewController;
+        // if (rootViewController) {
+        //     if (nativeDialog.popoverPresentationController) {
+        //         nativeDialog.popoverPresentationController.sourceView = rootViewController.view;
+        //         nativeDialog.popoverPresentationController.sourceRect = CGRectMake(rootViewController.view.bounds.size.width / 2.0, rootViewController.view.bounds.size.height / 2.0, 1.0, 1.0);
+        //         nativeDialog.popoverPresentationController.permittedArrowDirections = 0;
+        //     }
+
+        //     rootViewController.presentViewControllerAnimatedCompletion(nativeDialog, true, () => {
+        //     });
+
+        // } else {
         let currentPage = getCurrentPage();
         if (currentPage) {
             let view: View = currentPage;
@@ -159,6 +171,10 @@ export class DateTimePicker extends DateTimePickerBase {
                     const parentWithController = iosView.getParentWithViewController(view);
                     viewController = parentWithController ? parentWithController.viewController : undefined;
                 }
+
+                while (viewController.presentedViewController) {
+                    viewController = viewController.presentedViewController;
+                }
             }
 
             if (viewController) {
@@ -171,6 +187,7 @@ export class DateTimePicker extends DateTimePickerBase {
                 viewController.presentViewControllerAnimatedCompletion(nativeDialog, true, () => {
                 });
             }
+            // }
         }
     }
 
